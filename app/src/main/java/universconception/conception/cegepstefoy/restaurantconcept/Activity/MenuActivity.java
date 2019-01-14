@@ -1,5 +1,6 @@
 package universconception.conception.cegepstefoy.restaurantconcept.Activity;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ public class MenuActivity extends AppCompatActivity {
     ListView mylistview;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
@@ -61,8 +62,13 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String member_name = mMets.get(position).getNomMet();
-                Toast.makeText(getApplicationContext(), "" + member_name,
-                               Toast.LENGTH_SHORT).show();
+                int imageNumber = mMets.get(position).getProfile_pic_id();
+                Intent intent = new Intent(MenuActivity.this, CommanderMetsActivity.class);
+                intent.putExtra("member_name", member_name);
+                intent.putExtra("imageNumber", imageNumber);
+
+                startActivity(intent);
+
             }
         });
 

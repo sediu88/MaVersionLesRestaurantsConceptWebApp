@@ -23,7 +23,12 @@
         <activity android:name=".Activity.CommanderMetsActivity" />
         <activity android:name=".Activity.CreationMenuActivity" />
         <activity android:name=".Activity.AccepterCommandeActivity" />
-        <activity android:name=".Activity.SecondRegisterActivity"></activity>
+        <activity android:name=".Activity.SecondRegisterActivity" />
+        <activity
+            android:name=".Activity.PasserCommandeActivity"
+            android:label="@string/title_activity_passer_commande"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.PasserCommnadeActivity"></activity>
     </application>
 
 </manifest>
