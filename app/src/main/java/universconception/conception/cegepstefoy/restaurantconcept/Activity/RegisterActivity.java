@@ -23,18 +23,18 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordInput;
     private EditText confirmPasswordInput;
     private CheckBox checkBoxConditionTrue;
-
-    private List<Courriel> mCourriels = new ArrayList<>();
+    private EditText nameRegisterInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        this.courrielInput = findViewById(R.id.NameRegisterInput);
-        this.passwordInput = findViewById(R.id.courrielRegisterInput);
+        this.courrielInput = findViewById(R.id.courrielRegisterInput);
+        this.passwordInput = findViewById(R.id.passwordRegisterInput);
         this.confirmPasswordInput = findViewById(R.id.confirmPasswordInput);
         this.checkBoxConditionTrue = findViewById(R.id.checkBoxConditionTrue);
+        this.nameRegisterInput = findViewById(R.id.NameRegisterInput);
 
         this.checkBoxConditionTrue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -45,41 +45,70 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    public void onLoginTextClicked(View view) {
-        if(this.checkBoxConditionTrue.isChecked()){
-            Intent intent = new Intent(RegisterActivity.this, SecondRegisterActivity.class);
-            startActivity(intent);
-        }else {
-            this.checkBoxConditionTrue.setError("Is not checked");
+    public void onNextPageButtonClicked(View view) {
+        if (validations()) {
+            if (this.checkBoxConditionTrue.isChecked()) {
+                Intent intent = new Intent(RegisterActivity.this, SecondRegisterActivity.class);
+                intent.putExtra("nom", this.nameRegisterInput.getText().toString());
+                intent.putExtra("courriel", this.courrielInput.getText().toString());
+                intent.putExtra("password", this.passwordInput.getText().toString());
+                startActivity(intent);
+            } else {
+                this.checkBoxConditionTrue.setError("Vous devez accepter les conditions d'utilisation!");
+            }
         }
     }
 
     public boolean validations() {
-        //TODO
-        Courriel courriel = new Courriel(this.courrielInput.getText().toString());
-        if(mCourriels.contains(courriel)){
-            this.courrielInput.setError("this user already exists");
+        if (this.fieldsAreEmpty()) {
+            if (DataBase.getInstance().checkIfMailIsInDatabase(new Courriel(this.courrielInput.getText().toString()))) {
+                this.courrielInput.setError("Cet utilisateur existe deja!");
+                return false;
+            }
+            if (this.passwordDoNotMatch()) {
+                this.passwordInput.setError("Les mots de passe doivent etre identique!");
+                return false;
+            }
+
+            this.resetErrors();
+            return true;
+        }
+        return false;
+    }
+
+    public void resetErrors() {
+        this.courrielInput.setError(null);
+        this.nameRegisterInput.setError(null);
+        this.passwordInput.setError(null);
+        this.confirmPasswordInput.setError(null);
+
+    }
+
+    public boolean passwordDoNotMatch() {
+        if (this.passwordInput.getText().toString().equals(this.confirmPasswordInput.getText().toString())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean fieldsAreEmpty() {
+        if (this.nameRegisterInput.getText().toString().length() == 0) {
+            this.nameRegisterInput.setError("Ce champs ne peut pas etre vide!");
             return false;
         }
-        this.courrielInput.setError(null);
+        if (this.courrielInput.getText().toString().length() == 0) {
+            this.courrielInput.setError("Ce champs ne peut pas etre vide!");
+            return false;
+        }
+        if (this.passwordInput.getText().toString().length() == 0) {
+            this.passwordInput.setError("Ce champs ne peut pas etre vide!");
+            return false;
+        }
+        if (this.confirmPasswordInput.getText().toString().length() == 0) {
+            this.confirmPasswordInput.setError("Ce champs ne peut pas etre vide!");
+            return false;
+        }
         return true;
     }
-
-    public void registerUser() {
-        if (validations()){
-            CompteUsager compteUsager = new CompteUsager(new Courriel(this.courrielInput.getText().toString()),
-                                                         new Password(this.passwordInput.getText().toString()));
-            DataBase.getInstance().addUser(compteUsager);
-        }
-    }
-
-    public void passwordDoNotMatch() {
-        if (this.passwordInput.getText().toString().equals(this.confirmPasswordInput.getText().toString())) {
-            //PASSWORDS FINE
-        }
-        else {
-            // TODO : ERROR - PASSWORD DONT MATCH
-        }
-    }
-
 }

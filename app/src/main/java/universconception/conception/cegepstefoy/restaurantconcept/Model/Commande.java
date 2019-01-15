@@ -1,35 +1,50 @@
 package universconception.conception.cegepstefoy.restaurantconcept.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Commande {
 
-
-    private int commandeId;
-
-
     private List<Mets> metsCommande;
+    private Client client;
+    private CompteUsager user;
 
-
-    public Commande(int commandeId, List<Mets> metsCommande) {
-        this.commandeId = commandeId;
-        this.metsCommande = metsCommande;
+    public Commande() {
+        this.metsCommande = new ArrayList<>();
+        this.client=null;
     }
 
-    public int getCommandeId() {
-        return commandeId;
+    public Commande(Client client, List<Mets> order) {
+        this.metsCommande = order;
+        this.client=client;
     }
 
-    public void setCommandeId(int commandeId) {
-        this.commandeId = commandeId;
+    public Client getClient() {
+        return client;
+    }
+
+    public void addToOrder(Mets mets) {
+        this.metsCommande.add(mets);
+    }
+
+    public  void removeFromOrder(Mets mets) {
+        this.metsCommande.remove(mets);
     }
 
     public List<Mets> getMetsCommande() {
         return metsCommande;
     }
 
-    public void setMetsCommande(List<Mets> metsCommande) {
-        this.metsCommande = metsCommande;
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public CompteUsager getUser() {
+        return user;
+    }
+
+    public void setUser(CompteUsager user) {
+        this.user = user;
     }
 }
